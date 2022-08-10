@@ -5,44 +5,42 @@
 
 Provide a short description explaining the what, why, and how of your project. Use the following questions as a guide:
 
-I have created a simple calendar application that allows a user to save events for each hour of the day. This app runs in the browser and features dynamically updated HTML and CSS powered by jQuery.
+Using third-party APIs to access their data and functionality by making requests with specific parameters to a URL. By retrieving data from another application's API and using it in this weather applicaiton. I built a weather dashboard that will run in the browser and feature dynamically updated HTML and CSS.
 
-The starter code used the Moment.js (Links to an external site.) library to work with date and time, but a different JavaScript solutionwas used to handle this functionality since Moment.js is considered a "legacy" project. 
+Using the OpenWeather One Call API (Links to an external site.) the dashboard will retrieve weather data for citiesand use localStorage to store any persistent data. 
 
 # User Story
 
-AS AN employee with a busy schedule
+AS A traveler
 
-I WANT to add important events to a daily planner
+I WANT to see the weather outlook for multiple cities
 
-SO THAT I can manage my time effectively
+SO THAT I can plan a trip accordingl
+
 
 ## Acceptance Criteria
-GIVEN I am using a daily planner to create a schedule
+GIVEN a weather dashboard with form inputs
 
-WHEN I open the planner
+WHEN I search for a city
 
-THEN the current day is displayed at the top of the calendar
+THEN I am presented with current and future conditions for that city and that city is added to the search history
 
-WHEN I scroll down
+WHEN I view current weather conditions for that city
 
-THEN I am presented with time blocks for standard business hours
+THEN I am presented with the city name, the date, an icon representation of weather conditions, the temperature, the humidity, the wind speed, and the UV index
 
-WHEN I view the time blocks for that day
+WHEN I view the UV index
 
-THEN each time block is color-coded to indicate whether it is in the past, present, or future
+THEN I am presented with a color that indicates whether the conditions are favorable, moderate, or severe
 
-WHEN I click into a time block
+WHEN I view future weather conditions for that city
 
-THEN I can enter an event
+THEN I am presented with a 5-day forecast that displays the date, an icon representation of weather conditions, the temperature, the wind speed, and the humidity
 
-WHEN I click the save button for that time block
+WHEN I click on a city in the search history
 
-THEN the text for that event is saved in local storage
+THEN I am again presented with current and future conditions for that city
 
-WHEN I refresh the page
-
-THEN the saved events persist
 
 ## Snapshot
 
