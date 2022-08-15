@@ -1,0 +1,12 @@
+*{
+    outline: dashed red;
+}
+
+
+.jumbotron {
+    background-color: rgb(31, 31, 187);
+    color: aliceblue;
+    font-size: large;
+    text-align: center;
+        
+}
