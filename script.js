@@ -87,7 +87,7 @@ function forecast(cityid){
             const tempF=(((tempK-273.5)*1.80)+32).toFixed(2);
             const humidity= response.list[((i+1)*8)-1].main.humidity;
             const ws= response.list[((i+1)*8)-1].wind.speed;
-            const windsmph=(ws*2.237).toFixed(1);
+            const windsmph=((ws*2.237)).toFixed(1);
         
             $("#forecastDate"+i).html(date);
             $("#forecastImg"+i).html("<img src="+iconurl+">");
