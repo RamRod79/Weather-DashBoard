@@ -44,7 +44,7 @@ THEN I am again presented with current and future conditions for that city
 
 ## Snapshot
 
-![The password webpage includes a display for the password, a button to click to initiate the generation of a password and prompts while choosing a password.](./assets/images/work%20scheduler.jpg).
+![Screenshot of app being used.](./assets/images/Weather.jpg)
 
 ## Link
 
