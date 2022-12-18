@@ -1,52 +1,149 @@
 // root url and API key
-var weatherApiRootUrl = 'https://api.openweathermap.org';
-var APIKey = "11966b9c99b9aac332f04418ebd9ef84";
-var searchHistory = [];
+// var weatherApiRootUrl = 'https://api.openweathermap.org';
+// var APIKey = "11966b9c99b9aac332f04418ebd9ef84";
+// var searchHistory = [];
 
-var queryURL = "http://api.openweathermap.org/data/2.5/weather?q=" + city + "&appid=" + APIKey;
-
-function GetInfo(){
-    var newName=document.getElementById('cityInput');
-    var cityName=document.getElementById('cityname');
-    cityName.innerHTML = "--"+newName.value+"--"
-
-fetch ("https://api.openweathermap.org/data/2.5/forecast?q='+newName.value+'&appid=11966b9c99b9aac332f04418ebd9ef84")
-.then(response => response,json())
-.then(data => {
-    
-    // min/max values for 5 days
-    for (i=0;i<5;i++){
-        document.getElementById("day" +(i+1)+"Min").innerHTML ="Min:" +Number(data.list[i].main.temp_min - 273.15).toFixed(1)+ "°";
+var city="";
+var citySearch = $("#city-search");
+var searchBtn = $("#search-Btn");
+var clearHistoryBtn = $("#clear-history-btn");
+var currentCity = $("#current-city");
+var currentTemp = $("#temp");
+var currentHumidty= $("#humidity");
+var currentWind=$("#wind-speed");
+var sCity=[];
+// search city
+function find(c){
+    for (var i=0; i<sCity.length; i++){
+        if(c.toUpperCase()===sCity[i]){
+            return -1;
+        }
     }
-    for(i = 0; i<5; i++){
-        document.getElementById("day" + (i+1) + "Max").innerHTML = "Max: " + Number(data.list[i].main.temp_max - 273.15).toFixed(2) + "°";
-    }
-
-    //Getting Weather Icons
-     for(i = 0; i<5; i++){
-        document.getElementById("img" + (i+1)).src = "http://openweathermap.org/img/wn/"+
-        data.list[i].weather[0].icon+".png";
-    }
-  })
-
-.catch(err => alert("You did something wrong"))
+    return 1;
 }
 
-//Days of the Week
-const d = new Date();
-const weekday = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday",];
-
-//days array
-function CheckDay(day){
-    if(day + d.getDay() > 6){
-        return day + d.getDay() - 7;
-    }
-    else{
-        return day + d.getDay();
+var APIKey="11966b9c99b9aac332f04418ebd9ef84";
+// Curent and forecasted weather 
+function displayWeather(event){
+    event.preventDefault();
+    if(citySearch.val().trim()!==""){
+        city=citySearch.val().trim();
+        currentWeather(city);
     }
 }
+// pull current city data
+function currentWeather(city){
+    const queryURL= "https://api.openweathermap.org/data/2.5/weather?q=" + city + "&APPID=" + APIKey;
+    $.ajax({
+        url:queryURL,
+        method:"GET",
+    }).then(function(response){
+        const weathericon= response.weather[0].icon;
+        const iconurl="https://openweathermap.org/img/wn/"+weathericon +"@2x.png";
+        const date=new Date(response.dt*1000).toLocaleDateString();
+        $(currentCity).html(response.name +"("+date+")" + "<img src="+iconurl+">");
+        const tempF = (response.main.temp - 273.15) * 1.80 + 32;
+        $(currentTemp).html((tempF).toFixed(2)+"&#8457");
+        $(currentHumidty).html(response.main.humidity+"%");
+        const ws=response.wind.speed;
+        const windsmph=(ws*2.237).toFixed(1);
+        $(currentWind).html(windsmph+"MPH");
+        forecast(response.id);
+        if(response.cod==200){
+            sCity=JSON.parse(localStorage.getItem("cityname"));
+            console.log(sCity);
+            if (sCity==null){
+                sCity=[];
+                sCity.push(city.toUpperCase()
+                );
+                localStorage.setItem("cityname",JSON.stringify(sCity));
+                addToList(city);
+            }
+            else {
+                if(find(city)>0){
+                    sCity.push(city.toUpperCase());
+                    localStorage.setItem("cityname",JSON.stringify(sCity));
+                    addToList(city);
+                }
+            }
+        }
 
-    for(i = 0; i<5; i++){
-        document.getElementById("day" + (i+1)).innerHTML = weekday[CheckDay(i)];
+    });
+}
+
+function forecast(cityid){
+    const dayover= false;
+    const queryforcastURL="https://api.openweathermap.org/data/2.5/forecast?id="+cityid+"&appid="+APIKey;
+    $.ajax({
+        url:queryforcastURL,
+        method:"GET"
+    }).then(function(response){
+        
+        for (i=0;i<5;i++){
+            const date= new Date((response.list[((i+1)*8)-1].dt)*1000).toLocaleDateString();
+            const iconcode= response.list[((i+1)*8)-1].weather[0].icon;
+            const iconurl="https://openweathermap.org/img/wn/"+iconcode+".png";
+            const tempK= response.list[((i+1)*8)-1].main.temp;
+            const tempF=(((tempK-273.5)*1.80)+32).toFixed(2);
+            const humidity= response.list[((i+1)*8)-1].main.humidity;
+            const ws= response.list[((i+1)*8)-1].wind.speed;
+            const windsmph=(ws*2.237).toFixed(1);
+        
+            $("#forecastDate"+i).html(date);
+            $("#forecastImg"+i).html("<img src="+iconurl+">");
+            $("#forecastTemp"+i).html(tempF+"&#8457");
+            $("#forecastHumidity"+i).html(humidity+"%");
+            $("#forecastWindsmph"+i).html(windsmph+"MPH");          
+        }
+        
+    });
+}
+
+//add city on the search history
+function addToList(c){
+    const listEl= $("<li>"+c.toUpperCase()+"</li>");
+    $(listEl).attr("class","list-group-item");
+    $(listEl).attr("data-value",c.toUpperCase());
+    $(".list-group").append(listEl);
+}
+// display past search 
+function invokePastSearch(event){
+    const liEl=event.target;
+    if (event.target.matches("li")){
+        city=liEl.textContent.trim();
+        currentWeather(city);
     }
+
+}
+
+// render function
+function loadlastCity(){
+    $("ul").empty();
+    const sCity = JSON.parse(localStorage.getItem("cityname"));
+    if(sCity!==null){
+        sCity=JSON.parse(localStorage.getItem("cityname"));
+        for(i=0; i<sCity.length;i++){
+            addToList(sCity[i]);
+        }
+        city=sCity[i-1];
+        currentWeather(city);
+    }
+
+}
+//Clear search history 
+function clearHistory(event){
+    event.preventDefault();
+    sCity=[];
+    localStorage.removeItem("cityname");
+    document.location.reload();
+
+}
+//Click Handlers
+$("#search-Btn").on("click",displayWeather);
+$(document).on("click",invokePastSearch);
+$(window).on("load",loadlastCity);
+$("#clear-history-btn").on("click",clearHistory);
+
+
+
 
