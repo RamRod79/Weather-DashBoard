@@ -5,7 +5,7 @@
 
 var city="";
 var citySearch = $("#city-search");
-var searchBtn = $("#search-Btn");
+var searchBtn = $("#search-btn");
 var clearHistoryBtn = $("#clear-history-btn");
 var currentCity = $("#current-city");
 var currentTemp = $("#temp");
@@ -139,7 +139,7 @@ function clearHistory(event){
 
 }
 //Click Handlers
-$("#search-Btn").on("click",displayWeather);
+$("#search-btn").on("click",displayWeather);
 $(document).on("click",invokePastSearch);
 $(window).on("load",loadlastCity);
 $("#clear-history-btn").on("click",clearHistory);
