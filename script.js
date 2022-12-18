@@ -1,6 +1,7 @@
 // root url and API key
 var weatherApiRootUrl = 'https://api.openweathermap.org';
 var APIKey = "11966b9c99b9aac332f04418ebd9ef84";
+var searchHistory = [];
 
 var queryURL = "http://api.openweathermap.org/data/2.5/weather?q=" + city + "&appid=" + APIKey;
 
@@ -48,3 +49,4 @@ function CheckDay(day){
     for(i = 0; i<5; i++){
         document.getElementById("day" + (i+1)).innerHTML = weekday[CheckDay(i)];
     }
+
